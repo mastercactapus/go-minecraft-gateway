@@ -1,4 +1,4 @@
-package Shared
+package main
 
 type PropertyData struct {
 	Name string

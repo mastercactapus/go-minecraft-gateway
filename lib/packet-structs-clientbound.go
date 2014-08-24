@@ -1,4 +1,4 @@
-package ClientBound
+package main
 
 type KeepAlive struct {
 	//id 0x00
