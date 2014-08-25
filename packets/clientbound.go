@@ -1,4 +1,4 @@
-package Clientbound
+package Packets
 
 //Status State
 type StatusResponse struct {
@@ -15,7 +15,7 @@ type StatusResponse struct {
 		Description string `json:"description"`
 	}
 }
-type StatusPing struct {
+type StatusPong struct {
 	ID   uint64 //0x01
 	Time int64
 }

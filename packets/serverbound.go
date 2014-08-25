@@ -1,4 +1,4 @@
-package Serverbound
+package Packets
 
 //Handshake State
 type Handshake struct {
