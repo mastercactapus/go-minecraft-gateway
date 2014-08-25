@@ -45,7 +45,7 @@ func NewServer(bindAddress string) (*Server, error) {
 		panic(err)
 	}
 
-	go HandleConnections(s)
+	HandleConnections(s)
 
 	return s, nil
 }

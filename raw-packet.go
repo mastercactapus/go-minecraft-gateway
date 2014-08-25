@@ -4,13 +4,14 @@ import (
 	"./packet-decoder"
 	"bytes"
 	"encoding/binary"
+	"io"
 )
 
 type RawPacket struct {
 	Payload []byte
 }
 
-func NextPacket(src PacketDecoder.MultiReader) (*RawPacket, error) {
+func NextPacket(src io.Reader) (*RawPacket, error) {
 	result := new(RawPacket)
 	decoder := PacketDecoder.NewDecoder(src)
 
