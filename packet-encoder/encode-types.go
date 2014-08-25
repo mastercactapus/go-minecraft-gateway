@@ -4,59 +4,57 @@ import (
 	"encoding/binary"
 )
 
-func (self *Encoder) Packet(src *Encoder) error {
-	err := self.Varint(src.written)
-	if err != nil {
-		return err
-	}
-	err = self.WriteBytes(src.bytesBuffer.Bytes())
-	if err != nil {
-		return err
-	}
-	return nil
+func (self *Encoder) Packet(src *Encoder) {
+	data := src.bytesBuffer.Bytes()
+	self.Varint(uint64(len(data)))
+	self.writeBytesPanic(data)
 }
 
-func (self *Encoder) Varint(val uint64) error {
+func (self *Encoder) Varint(val uint64) {
 	buf := make([]byte, binary.MaxVarintLen32)
 	bytes := binary.PutUvarint(buf, val)
-	return self.WriteBytes(buf[:bytes])
+	self.writeBytesPanic(buf[:bytes])
 }
 
-func (self *Encoder) String(str string) error {
+func (self *Encoder) String(str string) {
 	stringLength := uint64(len(str))
-	err := self.Varint(stringLength)
-	if err != nil {
-		return err
-	}
-
-	return self.WriteBytes([]byte(str))
+	self.Varint(stringLength)
+	self.writeBytesPanic([]byte(str))
 }
 
-func (self *Encoder) Bool(val bool) error {
+func (self *Encoder) Bool(val bool) {
 	var b byte
 	if val {
 		b = 1
 	} else {
 		b = 0
 	}
-	return self.Byte(b)
+	self.Byte(b)
 }
 
-func (self *Encoder) Byte(val byte) error {
-	return self.WriteByte(val)
+func (self *Encoder) Byte(val byte) {
+	self.writeBytePanic(val)
 }
-func (self *Encoder) Short(val int16) error {
-	return binary.Write(self, binary.BigEndian, &val)
+
+func (self *Encoder) writeBinary(val interface{}) {
+	err := binary.Write(self, binary.BigEndian, &val)
+	if err != nil {
+		panic(err)
+	}
 }
-func (self *Encoder) Int(val int32) error {
-	return binary.Write(self, binary.BigEndian, &val)
+
+func (self *Encoder) Short(val int16) {
+	self.writeBinary(val)
 }
-func (self *Encoder) Long(val int64) error {
-	return binary.Write(self, binary.BigEndian, &val)
+func (self *Encoder) Int(val int32) {
+	self.writeBinary(val)
 }
-func (self *Encoder) Float(val float32) error {
-	return binary.Write(self, binary.BigEndian, &val)
+func (self *Encoder) Long(val int64) {
+	self.writeBinary(val)
 }
-func (self *Encoder) Double(val float64) error {
-	return binary.Write(self, binary.BigEndian, &val)
+func (self *Encoder) Float(val float32) {
+	self.writeBinary(val)
+}
+func (self *Encoder) Double(val float64) {
+	self.writeBinary(val)
 }

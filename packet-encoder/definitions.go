@@ -28,6 +28,7 @@ func (self *Encoder) Write(data []byte) (int, error) {
 	self.written += uint64(n)
 	return n, err
 }
+
 func (self *Encoder) WriteByte(v byte) error {
 	n, err := self.Write([]byte{v})
 	if n == 0 {
@@ -49,4 +50,18 @@ func (self *Encoder) WriteBytes(data []byte) error {
 	}
 
 	return nil
+}
+
+func (self *Encoder) writeBytePanic(v byte) {
+	err := self.WriteByte(v)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (self *Encoder) writeBytesPanic(v []byte) {
+	err := self.WriteBytes(v)
+	if err != nil {
+		panic(err)
+	}
 }
