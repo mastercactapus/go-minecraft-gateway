@@ -5,12 +5,15 @@ import (
 )
 
 func (self *Encoder) Packet(src *Encoder) error {
-	err := self.Varint(src.Written)
+	err := self.Varint(src.written)
 	if err != nil {
 		return err
 	}
-	err = self.WriteBytes(src.Data[:src.Written])
-	return err
+	err = self.WriteBytes(src.bytesBuffer.Bytes())
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (self *Encoder) Varint(val uint64) error {

@@ -2,44 +2,37 @@ package PacketEncoder
 
 import (
 	"bytes"
+	"io"
 )
-
-const (
-	MaxPacketSize = 1024 * 1024 * 32
-)
-
-type MultiWriter interface {
-	Write([]byte) (int, error)
-	WriteByte(byte) error
-}
 
 type Encoder struct {
-	Writer  MultiWriter
-	Written uint64
-	Data    []byte
+	writer      io.Writer
+	written     uint64
+	bytesBuffer *bytes.Buffer
 }
 
-func NewEncoder(writer MultiWriter) *Encoder {
-	return &Encoder{writer, 0, []byte{}}
+func NewEncoder(writer io.Writer) *Encoder {
+	return &Encoder{writer, 0, new(bytes.Buffer)}
 }
 
 func NewPacket() *Encoder {
 	enc := new(Encoder)
-	enc.Data = make([]byte, MaxPacketSize)
-	writer := MultiWriter(bytes.NewBuffer(enc.Data))
-	enc.Writer = writer
-	enc.Written = 0
+	enc.bytesBuffer = new(bytes.Buffer)
+	enc.writer = enc.bytesBuffer
+	enc.written = 0
 	return enc
 }
 
 func (self *Encoder) Write(data []byte) (int, error) {
-	n, err := self.Writer.Write(data)
-	self.Written += uint64(n)
+	n, err := self.writer.Write(data)
+	self.written += uint64(n)
 	return n, err
 }
-func (self *Encoder) WriteByte(data byte) error {
-	err := self.Writer.WriteByte(data)
-	self.Written++
+func (self *Encoder) WriteByte(v byte) error {
+	n, err := self.Write([]byte{v})
+	if n == 0 {
+		return io.EOF
+	}
 	return err
 }
 

@@ -10,6 +10,7 @@ func (self *Decoder) Packet() (*Decoder, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	data, err := self.ReadBytes(dataSize)
 	if err != nil {
 		return nil, err
@@ -20,7 +21,7 @@ func (self *Decoder) Packet() (*Decoder, error) {
 }
 
 func (self *Decoder) Varint() (uint64, error) {
-	return binary.ReadUvarint(self.reader)
+	return binary.ReadUvarint(self)
 }
 
 func (self *Decoder) String() (string, error) {
@@ -38,7 +39,7 @@ func (self *Decoder) String() (string, error) {
 }
 
 func (self *Decoder) Bool() (bool, error) {
-	b, err := self.reader.ReadByte()
+	b, err := self.Byte()
 	if b != 0 && b != 1 && err == nil {
 		err = InvalidBoolean
 	}
@@ -47,10 +48,15 @@ func (self *Decoder) Bool() (bool, error) {
 }
 
 func (self *Decoder) Byte() (byte, error) {
-	return self.reader.ReadByte()
+	return self.ReadByte()
 }
 func (self *Decoder) Short() (int16, error) {
 	var val int16
+	err := binary.Read(self.reader, binary.BigEndian, &val)
+	return val, err
+}
+func (self *Decoder) Ushort() (uint16, error) {
+	var val uint16
 	err := binary.Read(self.reader, binary.BigEndian, &val)
 	return val, err
 }
