@@ -38,34 +38,52 @@ func (self *Decoder) Bool() bool {
 func (self *Decoder) Byte() byte {
 	return self.readBytePanic()
 }
-func (self *Decoder) binaryRead(v interface{}) interface{} {
-	err := binary.Read(self, binary.BigEndian, &v)
+
+func (self *Decoder) Short() int16 {
+	var val int16
+	err := binary.Read(self, binary.BigEndian, &val)
 	if err != nil {
 		panic(err)
 	}
-	return v
-}
-func (self *Decoder) Short() int16 {
-	var val int16
-	return self.binaryRead(val).(int16)
+	return val
 }
 func (self *Decoder) Ushort() uint16 {
 	var val uint16
-	return self.binaryRead(val).(uint16)
+	err := binary.Read(self, binary.BigEndian, &val)
+	if err != nil {
+		panic(err)
+	}
+	return val
 }
 func (self *Decoder) Int() int32 {
 	var val int32
-	return self.binaryRead(val).(int32)
+	err := binary.Read(self, binary.BigEndian, &val)
+	if err != nil {
+		panic(err)
+	}
+	return val
 }
 func (self *Decoder) Long() int64 {
 	var val int64
-	return self.binaryRead(val).(int64)
+	err := binary.Read(self, binary.BigEndian, &val)
+	if err != nil {
+		panic(err)
+	}
+	return val
 }
 func (self *Decoder) Float() float32 {
 	var val float32
-	return self.binaryRead(val).(float32)
+	err := binary.Read(self, binary.BigEndian, &val)
+	if err != nil {
+		panic(err)
+	}
+	return val
 }
 func (self *Decoder) Double() float64 {
 	var val float64
-	return self.binaryRead(val).(float64)
+	err := binary.Read(self, binary.BigEndian, &val)
+	if err != nil {
+		panic(err)
+	}
+	return val
 }

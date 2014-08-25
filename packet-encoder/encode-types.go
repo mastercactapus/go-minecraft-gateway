@@ -36,25 +36,33 @@ func (self *Encoder) Byte(val byte) {
 	self.writeBytePanic(val)
 }
 
-func (self *Encoder) writeBinary(val interface{}) {
+func (self *Encoder) Short(val int16) {
 	err := binary.Write(self, binary.BigEndian, &val)
 	if err != nil {
 		panic(err)
 	}
 }
-
-func (self *Encoder) Short(val int16) {
-	self.writeBinary(val)
-}
 func (self *Encoder) Int(val int32) {
-	self.writeBinary(val)
+	err := binary.Write(self, binary.BigEndian, &val)
+	if err != nil {
+		panic(err)
+	}
 }
 func (self *Encoder) Long(val int64) {
-	self.writeBinary(val)
+	err := binary.Write(self, binary.BigEndian, &val)
+	if err != nil {
+		panic(err)
+	}
 }
 func (self *Encoder) Float(val float32) {
-	self.writeBinary(val)
+	err := binary.Write(self, binary.BigEndian, &val)
+	if err != nil {
+		panic(err)
+	}
 }
 func (self *Encoder) Double(val float64) {
-	self.writeBinary(val)
+	err := binary.Write(self, binary.BigEndian, &val)
+	if err != nil {
+		panic(err)
+	}
 }
