@@ -1,6 +1,9 @@
 package Server
 
-import ()
+import (
+	"fmt"
+	"github.com/mastercactapus/go-minecraft-gateway/packets"
+)
 
 func (self *Server) AuthenticateClient(client *ClientConnection) {
 	packet := client.Decoder.Packet()
@@ -10,5 +13,10 @@ func (self *Server) AuthenticateClient(client *ClientConnection) {
 	if packetType != 0 {
 		panic(UnexpectedPacketType)
 	}
+
+	loginStart := packet.LoginStart()
+	fmt.Println("Login:", loginStart.Name)
+
+	encryptionRequest := new(Packets.EncryptionRequest)
 
 }

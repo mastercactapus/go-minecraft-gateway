@@ -2,10 +2,10 @@ package PacketEncoder
 
 import (
 	"encoding/json"
-	"github.com/mastercactapus/go-minecraft-gateway/packets-clientbound"
+	"github.com/mastercactapus/go-minecraft-gateway/packets"
 )
 
-func (self *Encoder) ClientboundStatusResponse(data *Clientbound.StatusResponse) {
+func (self *Encoder) StatusResponse(data *Packets.StatusResponse) {
 	self.Varint(data.ID)
 	jsonString, err := json.Marshal(data.JSONResponse)
 	if err != nil {
@@ -15,16 +15,16 @@ func (self *Encoder) ClientboundStatusResponse(data *Clientbound.StatusResponse)
 	self.writeBytesPanic(jsonString)
 }
 
-func (self *Encoder) ClientboundStatusPing(data *Clientbound.StatusPing) {
+func (self *Encoder) StatusPong(data *Packets.StatusPong) {
 	self.Varint(data.ID)
 	self.Long(data.Time)
 }
 
-func (self *Encoder) ClientboundDisconnect(data *Clientbound.Disconnect) {
+func (self *Encoder) Disconnect(data *Packets.Disconnect) {
 	self.Varint(data.ID)
 	self.String(data.JSONData)
 }
-func (self *Encoder) ClientboundEncryptionRequest(data *Clientbound.EncryptionRequest) {
+func (self *Encoder) EncryptionRequest(data *Packets.EncryptionRequest) {
 	self.Varint(data.ID)
 	self.String(data.ServerID)
 	self.Short(int16(len(data.PublicKey)))

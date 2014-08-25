@@ -7,7 +7,7 @@ func (self ClientConnection) DoHandshake() uint64 {
 		panic(UnexpectedPacketType)
 	}
 
-	handshake := packet.ServerboundHandshake()
+	handshake := packet.Handshake()
 
 	if handshake.ProtocolVersion != ProtocolVersion {
 		panic(UnsupportedProtocolVersion)

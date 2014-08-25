@@ -1,11 +1,11 @@
 package PacketDecoder
 
 import (
-	"github.com/mastercactapus/go-minecraft-gateway/packets-serverbound"
+	"github.com/mastercactapus/go-minecraft-gateway/packets"
 )
 
-func (self *Decoder) ServerboundHandshake() *Serverbound.Handshake {
-	packet := new(Serverbound.Handshake)
+func (self *Decoder) Handshake() *Packets.Handshake {
+	packet := new(Packets.Handshake)
 	packet.ID = 0
 	packet.ProtocolVersion = self.Varint()
 	packet.ServerAddress = self.String()
@@ -14,22 +14,22 @@ func (self *Decoder) ServerboundHandshake() *Serverbound.Handshake {
 
 	return packet
 }
-func (self *Decoder) ServerboundStatusPing() *Serverbound.StatusPing {
-	packet := new(Serverbound.StatusPing)
+func (self *Decoder) StatusPing() *Packets.StatusPing {
+	packet := new(Packets.StatusPing)
 	packet.ID = 1
 	packet.Time = self.Long()
 	return packet
 }
 
-func (self *Decoder) ServerboundLoginStart() *Serverbound.LoginStart {
-	packet := new(Serverbound.LoginStart)
+func (self *Decoder) LoginStart() *Packets.LoginStart {
+	packet := new(Packets.LoginStart)
 	packet.ID = 0
 	packet.Name = self.String()
 	return packet
 }
 
-func (self *Decoder) ServerboundEncryptionResponse() *Serverbound.EncryptionResponse {
-	packet := new(Serverbound.EncryptionResponse)
+func (self *Decoder) EncryptionResponse() *Packets.EncryptionResponse {
+	packet := new(Packets.EncryptionResponse)
 	packet.ID = 1
 	secretLength := self.Short()
 	packet.SharedSecret = self.readBytesPanic(uint64(secretLength))

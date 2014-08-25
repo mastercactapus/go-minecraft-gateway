@@ -2,7 +2,7 @@ package Server
 
 import (
 	"github.com/mastercactapus/go-minecraft-gateway/packet-encoder"
-	"github.com/mastercactapus/go-minecraft-gateway/packets-clientbound"
+	"github.com/mastercactapus/go-minecraft-gateway/packets"
 )
 
 func (self ClientConnection) DoStatusCheck() {
@@ -14,7 +14,7 @@ func (self ClientConnection) DoStatusCheck() {
 	}
 
 	//create response packet
-	data := new(Clientbound.StatusResponse)
+	data := new(Packets.StatusResponse)
 	data.ID = 0
 
 	data.JSONResponse.Version.Name = VersionName
@@ -25,7 +25,7 @@ func (self ClientConnection) DoStatusCheck() {
 	data.JSONResponse.Description = "Minecraft Gateway Server"
 
 	response := PacketEncoder.NewPacket()
-	response.ClientboundStatusResponse(data)
+	response.StatusResponse(data)
 	self.Encoder.Packet(response)
 
 }
@@ -38,9 +38,9 @@ func (self ClientConnection) DoStatusPing() {
 		panic(UnexpectedPacketType)
 	}
 
-	data := packet.ServerboundStatusPing()
+	data := packet.StatusPing()
 	response := PacketEncoder.NewPacket()
-	response.ClientboundStatusPing(&Clientbound.StatusPing{1, data.Time})
+	response.StatusPong(&Packets.StatusPong{1, data.Time})
 
 	self.Encoder.Packet(response)
 
