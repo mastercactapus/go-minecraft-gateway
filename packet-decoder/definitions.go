@@ -1,6 +1,7 @@
 package PacketDecoder
 
 import (
+	"errors"
 	"io"
 )
 
@@ -23,7 +24,7 @@ func (self *Decoder) ReadByte() (byte, error) {
 		return 0, err
 	}
 	if n == 0 {
-		return 0, io.EOF
+		return 0, errors.New("socket closed")
 	}
 
 	return b[0], nil

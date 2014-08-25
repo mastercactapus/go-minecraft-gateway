@@ -5,8 +5,8 @@ import (
 	"github.com/mastercactapus/go-minecraft-gateway/packets"
 )
 
-func (self ClientConnection) DoStatusCheck() {
-	packet := self.Decoder.Packet()
+func (self *Server) DoStatusCheck(client *ClientConnection) {
+	packet := client.Decoder.Packet()
 	packetType := packet.Varint()
 
 	if packetType != 0 {
@@ -20,18 +20,18 @@ func (self ClientConnection) DoStatusCheck() {
 	data.JSONResponse.Version.Name = VersionName
 	data.JSONResponse.Version.Protocol = ProtocolVersion
 
-	data.JSONResponse.Players.Max = 9001
-	data.JSONResponse.Players.Online = 2
+	data.JSONResponse.Players.Max = self.MaxClients
+	data.JSONResponse.Players.Online = self.OnlineClients
 	data.JSONResponse.Description = "Minecraft Gateway Server"
 
 	response := PacketEncoder.NewPacket()
 	response.StatusResponse(data)
-	self.Encoder.Packet(response)
+	client.Encoder.Packet(response)
 
 }
 
-func (self ClientConnection) DoStatusPing() {
-	packet := self.Decoder.Packet()
+func (self *Server) DoStatusPing(client *ClientConnection) {
+	packet := client.Decoder.Packet()
 	packetType := packet.Varint()
 
 	if packetType != 1 {
@@ -42,6 +42,6 @@ func (self ClientConnection) DoStatusPing() {
 	response := PacketEncoder.NewPacket()
 	response.StatusPong(&Packets.StatusPong{1, data.Time})
 
-	self.Encoder.Packet(response)
+	client.Encoder.Packet(response)
 
 }

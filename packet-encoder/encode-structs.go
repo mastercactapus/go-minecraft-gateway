@@ -32,3 +32,8 @@ func (self *Encoder) EncryptionRequest(data *Packets.EncryptionRequest) {
 	self.Short(int16(len(data.VerifyToken)))
 	self.writeBytesPanic(data.VerifyToken)
 }
+func (self *Encoder) LoginSuccess(data *Packets.LoginSuccess) {
+	self.Varint(data.ID)
+	self.String(data.UUID)
+	self.String(data.Username)
+}

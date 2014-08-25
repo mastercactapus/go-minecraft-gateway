@@ -1,7 +1,7 @@
 package Server
 
-func (self ClientConnection) DoHandshake() uint64 {
-	packet := self.Decoder.Packet()
+func (self *Server) DoHandshake(client *ClientConnection) uint64 {
+	packet := client.Decoder.Packet()
 	packetType := packet.Varint()
 	if packetType != 0 {
 		panic(UnexpectedPacketType)

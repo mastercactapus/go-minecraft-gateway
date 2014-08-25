@@ -1,11 +1,11 @@
 package Server
 
 import (
+	"crypto/cipher"
 	"errors"
 	"fmt"
 	"github.com/mastercactapus/go-minecraft-gateway/packet-decoder"
 	"github.com/mastercactapus/go-minecraft-gateway/packet-encoder"
-	"io"
 	"net"
 	"runtime/debug"
 )
@@ -28,9 +28,10 @@ type ClientConnection struct {
 	Conn          net.Conn
 	UUID          string
 	Authenticated bool
+	ServerHash    string
+	Texture       string
 	Username      string
-	Reader        io.Reader
-	Writer        io.Writer
+	Cipher        cipher.Block
 	Decoder       *PacketDecoder.Decoder
 	Encoder       *PacketEncoder.Encoder
 }
@@ -41,6 +42,9 @@ func (self Server) NewClient(conn net.Conn) {
 
 	defer func() {
 		err := recover()
+		if c.Authenticated {
+			self.OnlineClients--
+		}
 		if err != nil {
 			fmt.Printf("Client terminated: %s -- %s\n", c.Conn.RemoteAddr().String(), err)
 			debug.PrintStack()
@@ -48,17 +52,14 @@ func (self Server) NewClient(conn net.Conn) {
 		c.Conn.Close()
 	}()
 
-	c.Reader = conn
-	c.Writer = conn
+	c.Decoder = PacketDecoder.NewDecoder(c.Conn)
+	c.Encoder = PacketEncoder.NewEncoder(c.Conn)
 
-	c.Decoder = PacketDecoder.NewDecoder(c.Reader)
-	c.Encoder = PacketEncoder.NewEncoder(c.Writer)
-
-	nextState := c.DoHandshake()
+	nextState := self.DoHandshake(c)
 
 	if nextState == STATUS {
-		c.DoStatusCheck()
-		c.DoStatusPing()
+		self.DoStatusCheck(c)
+		self.DoStatusPing(c)
 	} else if nextState == LOGIN {
 		self.AuthenticateClient(c)
 	} else {

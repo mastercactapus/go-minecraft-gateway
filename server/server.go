@@ -7,11 +7,18 @@ import (
 	"net"
 )
 
+const (
+	MaxClientsDefault = 1024
+)
+
 type Server struct {
 	Connections   []ClientConnection
 	PrivateKey    *rsa.PrivateKey
 	PublicKeyData []byte
 	Socket        net.Listener
+	ServerID      string
+	MaxClients    int
+	OnlineClients int
 }
 
 func HandleConnections(s *Server) {
@@ -30,6 +37,11 @@ func HandleConnections(s *Server) {
 func NewServer(bindAddress string) (*Server, error) {
 	s := new(Server)
 	sck, err := net.Listen("tcp", bindAddress)
+
+	//seems to be blank nowadays
+	s.ServerID = ""
+	s.MaxClients = MaxClientsDefault
+	s.OnlineClients = 0
 
 	if err != nil {
 		panic(err)
