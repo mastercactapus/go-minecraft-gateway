@@ -1,6 +1,9 @@
 package PacketDecoder
 
 import "../packets-serverbound"
+import (
+	"github.com/mastercactapus/go-minecraft-gateway/packets-serverbound"
+)
 
 func (self *Decoder) ServerboundHandshake() (*Serverbound.Handshake, error) {
 	var err error

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"./server"
 	"bufio"
 	"fmt"
+	"github.com/mastercactapus/go-minecraft-gateway/server"
 	"net"
 )
 
@@ -22,6 +22,7 @@ func main() {
 	ln, err := net.Listen("tcp", ":3000")
 	if err != nil {
 		fmt.Printf("Error creating listener: %s\n", err)
+
 		return
 	}
 

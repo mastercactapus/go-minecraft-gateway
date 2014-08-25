@@ -1,9 +1,9 @@
 package main
 
 import (
-	"./packet-decoder"
 	"bytes"
 	"encoding/binary"
+	"github.com/mastercactapus/go-minecraft-gateway/packet-decoder"
 	"io"
 )
 

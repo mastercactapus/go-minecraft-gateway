@@ -1,11 +1,11 @@
 package Server
 
 import (
-	"../packet-decoder"
-	"../packet-encoder"
-	"../packets-clientbound"
 	"errors"
 	"fmt"
+	"github.com/mastercactapus/go-minecraft-gateway/packet-decoder"
+	"github.com/mastercactapus/go-minecraft-gateway/packet-encoder"
+	"github.com/mastercactapus/go-minecraft-gateway/packets-clientbound"
 	"io"
 	"net"
 )
@@ -42,6 +42,7 @@ func (self Server) NewClient(conn net.Conn) {
 
 	c.Decoder = PacketDecoder.NewDecoder(c.Reader)
 	c.Encoder = PacketEncoder.NewEncoder(c.Writer)
+
 	nextState, err := c.DoHandshake()
 	if err != nil {
 		fmt.Printf("Handshake failed: %s\n", err)

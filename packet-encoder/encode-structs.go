@@ -1,8 +1,8 @@
 package PacketEncoder
 
 import (
-	"../packets-clientbound"
 	"encoding/json"
+	"github.com/mastercactapus/go-minecraft-gateway/packets-clientbound"
 )
 
 func (self *Encoder) ClientboundStatusResponse(data *Clientbound.StatusResponse) error {
