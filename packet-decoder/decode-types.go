@@ -5,78 +5,67 @@ import (
 	"encoding/binary"
 )
 
-func (self *Decoder) Packet() (*Decoder, error) {
-	dataSize, err := self.Varint()
-	if err != nil {
-		return nil, err
-	}
-
-	data, err := self.ReadBytes(dataSize)
-	if err != nil {
-		return nil, err
-	}
-
+func (self *Decoder) Packet() *Decoder {
+	dataSize := self.Varint()
+	data := self.readBytesPanic(dataSize)
 	reader := bytes.NewReader(data)
-	return NewDecoder(reader), nil
+	return NewDecoder(reader)
 }
 
-func (self *Decoder) Varint() (uint64, error) {
-	return binary.ReadUvarint(self)
-}
-
-func (self *Decoder) String() (string, error) {
-	stringLength, err := self.Varint()
+func (self *Decoder) Varint() uint64 {
+	val, err := binary.ReadUvarint(self)
 	if err != nil {
-		return "", err
+		panic(err)
+	}
+	return val
+}
+
+func (self *Decoder) String() string {
+	stringLength := self.Varint()
+	stringData := self.readBytesPanic(stringLength)
+	return string(stringData)
+}
+
+func (self *Decoder) Bool() bool {
+	b := self.Byte()
+	if b != 0 && b != 1 {
+		panic(InvalidBoolean)
 	}
 
-	stringData, err := self.ReadBytes(stringLength)
+	return (b == 1)
+}
+
+func (self *Decoder) Byte() byte {
+	return self.readBytePanic()
+}
+func (self *Decoder) binaryRead(v interface{}) interface{} {
+	err := binary.Read(self, binary.BigEndian, &v)
 	if err != nil {
-		return "", err
+		panic(err)
 	}
-
-	return string(stringData), nil
+	return v
 }
-
-func (self *Decoder) Bool() (bool, error) {
-	b, err := self.Byte()
-	if b != 0 && b != 1 && err == nil {
-		err = InvalidBoolean
-	}
-
-	return (b == 1), err
-}
-
-func (self *Decoder) Byte() (byte, error) {
-	return self.ReadByte()
-}
-func (self *Decoder) Short() (int16, error) {
+func (self *Decoder) Short() int16 {
 	var val int16
-	err := binary.Read(self.reader, binary.BigEndian, &val)
-	return val, err
+	return self.binaryRead(val).(int16)
 }
-func (self *Decoder) Ushort() (uint16, error) {
+func (self *Decoder) Ushort() uint16 {
 	var val uint16
-	err := binary.Read(self.reader, binary.BigEndian, &val)
-	return val, err
+	return self.binaryRead(val).(uint16)
 }
-func (self *Decoder) Int() (int32, error) {
+func (self *Decoder) Int() int32 {
 	var val int32
-	err := binary.Read(self.reader, binary.BigEndian, &val)
-	return val, err
+	return self.binaryRead(val).(int32)
 }
-func (self *Decoder) Long() (int64, error) {
+func (self *Decoder) Long() int64 {
 	var val int64
-	err := binary.Read(self.reader, binary.BigEndian, &val)
-	return val, err
+	return self.binaryRead(val).(int64)
 }
-func (self *Decoder) Float() (float32, error) {
+func (self *Decoder) Float() float32 {
 	var val float32
-	err := binary.Read(self.reader, binary.BigEndian, &val)
-	return val, err
+	return self.binaryRead(val).(float32)
 }
-func (self *Decoder) Double() (float64, error) {
+func (self *Decoder) Double() float64 {
 	var val float64
-	err := binary.Read(self.reader, binary.BigEndian, &val)
-	return val, err
+	return self.binaryRead(val).(float64)
 }

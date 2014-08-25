@@ -45,3 +45,19 @@ func (self *Decoder) ReadBytes(n uint64) ([]byte, error) {
 
 	return buf, nil
 }
+
+func (self *Decoder) readBytesPanic(n uint64) []byte {
+	data, err := self.ReadBytes(n)
+	if err != nil {
+		panic(err)
+	}
+	return data
+}
+
+func (self *Decoder) readBytePanic() byte {
+	b, err := self.ReadByte()
+	if err != nil {
+		panic(err)
+	}
+	return b
+}
