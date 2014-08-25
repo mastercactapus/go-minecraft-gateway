@@ -24,9 +24,7 @@ type LoginStart struct {
 	Name string
 }
 type EncryptionResponse struct {
-	ID              uint64 //0x01
-	SharedSecretLen int16
-	SharedSecret    []byte
-	VerifyTokenLen  int16
-	VerifyToken     []byte
+	ID           uint64 //0x01
+	SharedSecret []byte
+	VerifyToken  []byte
 }

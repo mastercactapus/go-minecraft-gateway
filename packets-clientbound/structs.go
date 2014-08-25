@@ -26,12 +26,10 @@ type Disconnect struct {
 	JSONData string
 }
 type EncryptionRequest struct {
-	ID             uint64 //0x01
-	ServerID       string
-	PublicKeyLen   int16
-	PublicKey      []byte
-	VerifyTokenLen int16
-	VerifyToken    []byte
+	ID          uint64 //0x01
+	ServerID    string
+	PublicKey   []byte
+	VerifyToken []byte
 }
 type LoginSuccess struct {
 	ID       uint64 //0x02
