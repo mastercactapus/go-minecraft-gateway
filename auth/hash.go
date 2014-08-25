@@ -1,17 +1,12 @@
 package Auth
 
 import (
-	"crypto/sha1"
 	"fmt"
-	"io"
 	"strings"
 )
 
 // https://gist.github.com/SirCmpwn/404223052379e82f91e6
-func Digest(s string) string {
-	h := sha1.New()
-	io.WriteString(h, s)
-	hash := h.Sum(nil)
+func HashFix(hash []byte) string {
 
 	// Check for negative hashes
 	negative := (hash[0] & 0x80) == 0x80
