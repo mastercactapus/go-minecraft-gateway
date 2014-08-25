@@ -7,6 +7,7 @@ import (
 	"github.com/mastercactapus/go-minecraft-gateway/packet-encoder"
 	"io"
 	"net"
+	"runtime/debug"
 )
 
 const (
@@ -42,6 +43,7 @@ func (self Server) NewClient(conn net.Conn) {
 		err := recover()
 		if err != nil {
 			fmt.Printf("Client terminated: %s -- %s\n", c.Conn.RemoteAddr().String(), err)
+			debug.PrintStack()
 		}
 		c.Conn.Close()
 	}()
