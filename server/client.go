@@ -62,6 +62,7 @@ func (self Server) NewClient(conn net.Conn) {
 		self.DoStatusPing(c)
 	} else if nextState == LOGIN {
 		self.AuthenticateClient(c)
+		fmt.Printf("User %s has joined the server. id=%s \n", c.Username, c.UUID)
 	} else {
 		panic("Invalid state from client")
 	}
