@@ -37,3 +37,20 @@ func (self *Encoder) LoginSuccess(data *Packets.LoginSuccess) {
 	self.String(data.UUID)
 	self.String(data.Username)
 }
+
+func (self *Encoder) Handshake(data *Packets.Handshake) {
+	packet := NewPacket()
+	packet.Varint(data.ID)
+	packet.Varint(data.ProtocolVersion)
+	packet.String(data.ServerAddress)
+	packet.Ushort(data.ServerPort)
+	packet.Varint(data.NextState)
+	self.Packet(packet)
+}
+
+func (self *Encoder) LoginStart(data *Packets.LoginStart) {
+	packet := NewPacket()
+	packet.Varint(data.ID)
+	packet.String(data.Name)
+	self.Packet(packet)
+}

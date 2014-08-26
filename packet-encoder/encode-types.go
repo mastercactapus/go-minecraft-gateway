@@ -42,6 +42,12 @@ func (self *Encoder) Short(val int16) {
 		panic(err)
 	}
 }
+func (self *Encoder) Ushort(val uint16) {
+	err := binary.Write(self, binary.BigEndian, &val)
+	if err != nil {
+		panic(err)
+	}
+}
 func (self *Encoder) Int(val int32) {
 	err := binary.Write(self, binary.BigEndian, &val)
 	if err != nil {

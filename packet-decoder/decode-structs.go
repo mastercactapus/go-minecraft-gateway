@@ -37,3 +37,11 @@ func (self *Decoder) EncryptionResponse() *Packets.EncryptionResponse {
 	packet.VerifyToken = self.readBytesPanic(uint64(verifyLength))
 	return packet
 }
+
+func (self *Decoder) LoginSuccess() *Packets.LoginSuccess {
+	packet := new(Packets.LoginSuccess)
+	packet.ID = 2
+	packet.UUID = self.String()
+	packet.Username = self.String()
+	return packet
+}
