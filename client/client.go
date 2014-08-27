@@ -2,8 +2,6 @@ package Client
 
 import (
 	"fmt"
-	"github.com/mastercactapus/go-minecraft-gateway/packet-decoder"
-	"github.com/mastercactapus/go-minecraft-gateway/packet-encoder"
 	"github.com/mastercactapus/go-minecraft-gateway/packets"
 	"net"
 	"strconv"
@@ -11,10 +9,9 @@ import (
 )
 
 type Client struct {
-	Conn     net.Conn
-	Encoder  *PacketEncoder.Encoder
-	Decoder  *PacketDecoder.Decoder
-	Username string
+	Conn         net.Conn
+	packetStream *Packets.Stream
+	Username     string
 }
 
 func NewClient(address string, username string) (*Client, error) {
@@ -24,9 +21,7 @@ func NewClient(address string, username string) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	c.Encoder = PacketEncoder.NewEncoder(c.Conn)
-	c.Decoder = PacketDecoder.NewDecoder(c.Conn)
+	c.packetStream = Packets.NewStream(c.Conn)
 	c.Username = username
 
 	handshake := new(Packets.Handshake)
@@ -46,11 +41,9 @@ func NewClient(address string, username string) (*Client, error) {
 	loginStart.ID = 0
 	loginStart.Name = username
 
-	c.Encoder.Handshake(handshake)
-	c.Encoder.LoginStart(loginStart)
-
-	loginPacket := c.Decoder.Packet()
-	loginSuccess := loginPacket.LoginSuccess()
+	c.packetStream.WriteHandshake(handshake)
+	c.packetStream.WriteLoginStart(loginStart)
+	loginSuccess := c.packetStream.ReadLoginSuccess()
 
 	fmt.Printf("Logged in as %s %s\n", loginSuccess.Username, loginSuccess.UUID)
 
