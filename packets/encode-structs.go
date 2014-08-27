@@ -21,12 +21,12 @@ func (s *Stream) WriteStatusPong(data *StatusPong) {
 	s.writePacket()
 }
 
-func (s *Stream) Disconnect(data *Disconnect) {
+func (s *Stream) WriteDisconnect(data *Disconnect) {
 	s.writeUvarint(data.ID)
 	s.writeString(data.JSONData)
 	s.writePacket()
 }
-func (s *Stream) EncryptionRequest(data *EncryptionRequest) {
+func (s *Stream) WriteEncryptionRequest(data *EncryptionRequest) {
 	s.writeUvarint(data.ID)
 	s.writeString(data.ServerID)
 	s.writeShort(int16(len(data.PublicKey)))
@@ -35,14 +35,14 @@ func (s *Stream) EncryptionRequest(data *EncryptionRequest) {
 	s.writeBytes(data.VerifyToken)
 	s.writePacket()
 }
-func (s *Stream) LoginSuccess(data *LoginSuccess) {
+func (s *Stream) WriteLoginSuccess(data *LoginSuccess) {
 	s.writeUvarint(data.ID)
 	s.writeString(data.UUID)
 	s.writeString(data.Username)
 	s.writePacket()
 }
 
-func (s *Stream) Handshake(data *Handshake) {
+func (s *Stream) WriteHandshake(data *Handshake) {
 	s.writeUvarint(data.ID)
 	s.writeUvarint(data.ProtocolVersion)
 	s.writeString(data.ServerAddress)
@@ -50,7 +50,7 @@ func (s *Stream) Handshake(data *Handshake) {
 	s.writeUvarint(data.NextState)
 }
 
-func (s *Stream) LoginStart(data *LoginStart) {
+func (s *Stream) WriteLoginStart(data *LoginStart) {
 	s.writeUvarint(data.ID)
 	s.writeString(data.Name)
 	s.writePacket()
