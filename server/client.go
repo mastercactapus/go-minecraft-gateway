@@ -4,8 +4,7 @@ import (
 	"crypto/cipher"
 	"errors"
 	"fmt"
-	"github.com/mastercactapus/go-minecraft-gateway/packet-decoder"
-	"github.com/mastercactapus/go-minecraft-gateway/packet-encoder"
+	"github.com/mastercactapus/go-minecraft-gateway/packets"
 	"net"
 	"runtime/debug"
 )
@@ -32,8 +31,7 @@ type ClientConnection struct {
 	Texture       string
 	Username      string
 	Cipher        cipher.Block
-	Decoder       *PacketDecoder.Decoder
-	Encoder       *PacketEncoder.Encoder
+	packetStream  *Packets.Stream
 }
 
 func (self Server) NewClient(conn net.Conn) {
@@ -51,9 +49,7 @@ func (self Server) NewClient(conn net.Conn) {
 		}
 		c.Conn.Close()
 	}()
-
-	c.Decoder = PacketDecoder.NewDecoder(c.Conn)
-	c.Encoder = PacketEncoder.NewEncoder(c.Conn)
+	c.packetStream = Packets.NewStream(c.Conn)
 
 	nextState := self.DoHandshake(c)
 

@@ -1,13 +1,7 @@
 package Server
 
-func (self *Server) DoHandshake(client *ClientConnection) uint64 {
-	packet := client.Decoder.Packet()
-	packetType := packet.Varint()
-	if packetType != 0 {
-		panic(UnexpectedPacketType)
-	}
-
-	handshake := packet.Handshake()
+func (s *Server) DoHandshake(c *ClientConnection) uint64 {
+	handshake := c.packetStream.ReadHandshake()
 
 	if handshake.ProtocolVersion != ProtocolVersion {
 		panic(UnsupportedProtocolVersion)

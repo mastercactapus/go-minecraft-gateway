@@ -1,47 +1,25 @@
 package Server
 
 import (
-	"github.com/mastercactapus/go-minecraft-gateway/packet-encoder"
 	"github.com/mastercactapus/go-minecraft-gateway/packets"
 )
 
-func (self *Server) DoStatusCheck(client *ClientConnection) {
-	packet := client.Decoder.Packet()
-	packetType := packet.Varint()
-
-	if packetType != 0 {
-		panic(UnexpectedPacketType)
-	}
+func (s *Server) DoStatusCheck(c *ClientConnection) {
+	c.packetStream.ReadStatusRequest()
 
 	//create response packet
-	data := new(Packets.StatusResponse)
-	data.ID = 0
+	statusResponse := new(Packets.StatusResponse)
+	statusResponse.ID = 0
+	statusResponse.JSONResponse.Version.Name = VersionName
+	statusResponse.JSONResponse.Version.Protocol = ProtocolVersion
+	statusResponse.JSONResponse.Players.Max = s.MaxClients
+	statusResponse.JSONResponse.Players.Online = s.OnlineClients
+	statusResponse.JSONResponse.Description = "Minecraft Gateway Server"
 
-	data.JSONResponse.Version.Name = VersionName
-	data.JSONResponse.Version.Protocol = ProtocolVersion
-
-	data.JSONResponse.Players.Max = self.MaxClients
-	data.JSONResponse.Players.Online = self.OnlineClients
-	data.JSONResponse.Description = "Minecraft Gateway Server"
-
-	response := PacketEncoder.NewPacket()
-	response.StatusResponse(data)
-	client.Encoder.Packet(response)
-
+	c.packetStream.WriteStatusResponse(statusResponse)
 }
 
-func (self *Server) DoStatusPing(client *ClientConnection) {
-	packet := client.Decoder.Packet()
-	packetType := packet.Varint()
-
-	if packetType != 1 {
-		panic(UnexpectedPacketType)
-	}
-
-	data := packet.StatusPing()
-	response := PacketEncoder.NewPacket()
-	response.StatusPong(&Packets.StatusPong{1, data.Time})
-
-	client.Encoder.Packet(response)
-
+func (s *Server) DoStatusPing(c *ClientConnection) {
+	statusPing := c.packetStream.ReadStatusPing()
+	c.packetStream.WriteStatusPing(statusPing)
 }
