@@ -15,7 +15,7 @@ func (s *Stream) WriteStatusResponse(data *StatusResponse) {
 	s.writePacket()
 }
 
-func (s *Stream) WriteStatusPong(data *StatusPong) {
+func (s *Stream) WriteStatusPing(data *StatusPing) {
 	s.writeUvarint(data.ID)
 	s.writeLong(data.Time)
 	s.writePacket()

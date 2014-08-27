@@ -19,6 +19,16 @@ func (s *Stream) ReadHandshake() *Handshake {
 
 	return packet
 }
+
+func (s *Stream) ReadStatusRequest() *StatusRequest {
+	packet := new(StatusRequest)
+	packet.ID = s.readUvarint()
+	if packet.ID != 0 {
+		panic(InvalidPacketID)
+	}
+	return packet
+}
+
 func (s *Stream) ReadStatusPing() *StatusPing {
 	packet := new(StatusPing)
 	packet.ID = s.readUvarint()

@@ -15,10 +15,6 @@ type StatusResponse struct {
 		Description string `json:"description"`
 	}
 }
-type StatusPong struct {
-	ID   uint64 //0x01
-	Time int64
-}
 
 //Login State
 type Disconnect struct {
