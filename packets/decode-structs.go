@@ -8,7 +8,7 @@ var InvalidPacketID = errors.New("invalid packet id for type")
 
 func (s *Stream) ReadHandshake() *Handshake {
 	packet := new(Handshake)
-	packet.ID = s.readUvarint()
+	packet.ID = s.PeekPacketType()
 	if packet.ID != 0 {
 		panic(InvalidPacketID)
 	}
@@ -22,7 +22,7 @@ func (s *Stream) ReadHandshake() *Handshake {
 
 func (s *Stream) ReadStatusRequest() *StatusRequest {
 	packet := new(StatusRequest)
-	packet.ID = s.readUvarint()
+	packet.ID = s.PeekPacketType()
 	if packet.ID != 0 {
 		panic(InvalidPacketID)
 	}
@@ -31,7 +31,7 @@ func (s *Stream) ReadStatusRequest() *StatusRequest {
 
 func (s *Stream) ReadStatusPing() *StatusPing {
 	packet := new(StatusPing)
-	packet.ID = s.readUvarint()
+	packet.ID = s.PeekPacketType()
 	if packet.ID != 1 {
 		panic(InvalidPacketID)
 	}
@@ -41,7 +41,7 @@ func (s *Stream) ReadStatusPing() *StatusPing {
 
 func (s *Stream) ReadLoginStart() *LoginStart {
 	packet := new(LoginStart)
-	packet.ID = s.readUvarint()
+	packet.ID = s.PeekPacketType()
 	if packet.ID != 0 {
 		panic(InvalidPacketID)
 	}
@@ -51,7 +51,7 @@ func (s *Stream) ReadLoginStart() *LoginStart {
 
 func (s *Stream) ReadEncryptionResponse() *EncryptionResponse {
 	packet := new(EncryptionResponse)
-	packet.ID = s.readUvarint()
+	packet.ID = s.PeekPacketType()
 	if packet.ID != 1 {
 		panic(InvalidPacketID)
 	}
@@ -64,7 +64,7 @@ func (s *Stream) ReadEncryptionResponse() *EncryptionResponse {
 
 func (s *Stream) ReadLoginSuccess() *LoginSuccess {
 	packet := new(LoginSuccess)
-	packet.ID = s.readUvarint()
+	packet.ID = s.PeekPacketType()
 	if packet.ID != 2 {
 		panic(InvalidPacketID)
 	}
