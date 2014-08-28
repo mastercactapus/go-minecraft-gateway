@@ -73,6 +73,8 @@ func (s *Stream) writePacket() {
 	if numSent != int64(size) {
 		panic("could not write to stream")
 	}
-
-	s.outBuffer.Reset()
+	err = s.stream.Flush()
+	if err != nil {
+		panic(err)
+	}
 }

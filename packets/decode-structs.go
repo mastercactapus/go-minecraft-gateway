@@ -16,6 +16,7 @@ func (s *Stream) ReadHandshake() *Handshake {
 	packet.ServerAddress = s.readString()
 	packet.ServerPort = s.readUshort()
 	packet.NextState = s.readUvarint()
+	s.hasPacket = false
 
 	return packet
 }
@@ -26,6 +27,7 @@ func (s *Stream) ReadStatusRequest() *StatusRequest {
 	if packet.ID != 0 {
 		panic(InvalidPacketID)
 	}
+	s.hasPacket = false
 	return packet
 }
 
@@ -36,6 +38,7 @@ func (s *Stream) ReadStatusPing() *StatusPing {
 		panic(InvalidPacketID)
 	}
 	packet.Time = s.readLong()
+	s.hasPacket = false
 	return packet
 }
 
@@ -46,6 +49,7 @@ func (s *Stream) ReadLoginStart() *LoginStart {
 		panic(InvalidPacketID)
 	}
 	packet.Name = s.readString()
+	s.hasPacket = false
 	return packet
 }
 
@@ -59,6 +63,7 @@ func (s *Stream) ReadEncryptionResponse() *EncryptionResponse {
 	packet.SharedSecret = s.readBytes(uint64(secretLength))
 	verifyLength := s.readShort()
 	packet.VerifyToken = s.readBytes(uint64(verifyLength))
+	s.hasPacket = false
 	return packet
 }
 
@@ -70,5 +75,6 @@ func (s *Stream) ReadLoginSuccess() *LoginSuccess {
 	}
 	packet.UUID = s.readString()
 	packet.Username = s.readString()
+	s.hasPacket = false
 	return packet
 }
